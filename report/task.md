@@ -6,7 +6,7 @@
 - [x] Phase 4: Video Frame Extraction
 - [x] Phase 5: Face Detection & Alignment
 - [x] Phase 6: Feature Extraction (Spatial Features)
-- [ ] Phase 7: Temporal Modeling
+- [x] Phase 7: Temporal Modeling
 - [ ] Phase 8: Frequency-Domain Detection
 - [ ] Phase 9: Identity Consistency Detection
 - [ ] Phase 10: Physiological Signal Detection
