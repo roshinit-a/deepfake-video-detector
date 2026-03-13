@@ -1,0 +1,21 @@
+# Deepfake Video Detection System Roadmap
+
+- [x] Phase 1: Problem Definition & Project Structure
+- [x] Phase 2: Environment & Dependencies
+- [x] Phase 3: Dataset Acquisition
+- [x] Phase 4: Video Frame Extraction
+- [x] Phase 5: Face Detection & Alignment
+- [x] Phase 6: Feature Extraction (Spatial Features)
+- [ ] Phase 7: Temporal Modeling
+- [ ] Phase 8: Frequency-Domain Detection
+- [ ] Phase 9: Identity Consistency Detection
+- [ ] Phase 10: Physiological Signal Detection
+- [ ] Phase 11: Multi-Branch Fusion Model
+- [ ] Phase 12: Training Strategy
+- [ ] Phase 13: Explainability
+- [ ] Phase 14: Model Optimization
+- [ ] Phase 15: Backend API
+- [ ] Phase 16: Browser Plugin
+- [ ] Phase 17: Visualization Dashboard
+- [ ] Phase 18: Evaluation & Research Report
+- [ ] Phase 19: Final Project Presentation

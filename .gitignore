@@ -1,0 +1,12 @@
+dataset/
+frames/
+faces/
+venv/
+*.pyc
+__pycache__/
+*.egg-info/
+.DS_Store
+*.onnx
+*.pt
+*.pth
+*.h5
