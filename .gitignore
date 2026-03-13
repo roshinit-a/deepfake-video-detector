@@ -12,3 +12,4 @@ __pycache__/
 *.h5
 report/
 embeddings/
+frequency_features/
