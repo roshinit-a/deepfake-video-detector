@@ -1,162 +1,113 @@
 # 🕵️ Deepfake Video Detector
 
-> **AI-powered multi-modal deepfake detection** — combining spatial CNNs, temporal modeling, frequency analysis, and physiological signal detection to expose manipulated videos with high accuracy.
+> **AI-powered multi-modal deepfake detection** — An advanced ensemble system combining spatial CNNs, temporal modeling, frequency analysis, and physiological signal detection to expose AI-generated manipulations.
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.x-EE4C2C?logo=pytorch)](https://pytorch.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![GPU](https://img.shields.io/badge/GPU-CUDA%20Accelerated-76B900?logo=nvidia)](https://developer.nvidia.com/cuda-toolkit)
+<div align="center">
 
----
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.x-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![OpenCV](https://img.shields.io/badge/OpenCV-4.x-5C3EE8?logo=opencv&logoColor=white)](https://opencv.org/)
+[![NVIDIA](https://img.shields.io/badge/GPU-CUDA--Accelerated-76B900?logo=nvidia&logoColor=white)](https://developer.nvidia.com/cuda-toolkit)
+[![License: MIT](https://img.shields.io/badge/License-MIT-F1D900?logo=github&logoColor=black)](LICENSE)
 
-## 🎯 Objective
-
-| Input | Output |
-|-------|--------|
-| 🎬 A video file | 📊 Deepfake probability score (0–1) |
-
-The system extracts faces from video frames, analyzes them for spatial, temporal, and frequency anomalies, and produces a final classification.
+</div>
 
 ---
 
-## 🗂️ Project Structure
+## 🌟 Overview
 
+This project implements a state-of-the-art **Multi-Branch Fusion Model** designed to detect deepfakes by looking beyond simple pixel artifacts. It analyzes:
+- **Spatial Features**: Frame-by-frame visual consistency.
+- **Temporal Dynamics**: Flicker and motion irregularities across time.
+- **Frequency Domain**: Micro-structural GAN artifacts via Discrete Cosine Transform (DCT).
+- **Identity & Physiology**: Identity consistency across frames and heart rate (rPPG) anomalies.
+
+---
+
+## 🚀 Key Features
+
+- **Multi-Modal Fusion**: Combines 4 distinct feature branches using a learned **Channel Attention** mechanism.
+- **High Performance**: Achieved a baseline **AUC of 0.69** on the FF++ dataset (work-in-progress).
+- **Explainable AI (XAI)**:
+  - **Grad-CAM**: Visualize which parts of a face triggered the "Fake" classification.
+  - **Attention Mapping**: Understand which feature branch (e.g., Spatial vs. Frequency) contributed most to a specific decision.
+- **GPU Optimized**: Utilizes `Decord` and `MTCNN` for ultra-fast frame extraction and face detection.
+
+---
+
+## 🔬 Detection Architecture
+
+```mermaid
+graph TD
+    A[🎬 Input Video] --> B[🖼️ Frame Extraction]
+    B --> C[👤 Face Detection & Alignment]
+    C --> D{Multi-Branch Extraction}
+    
+    D --> D1[🧠 Spatial Branch - ResNet-50]
+    D --> D2[📈 Temporal Branch - BiLSTM]
+    D --> D3[🌊 Frequency Branch - DCT]
+    D --> D4[💓 Identity & rPPG Branch]
+    
+    D1 & D2 & D3 & D4 --> E[🔀 Channel Attention Fusion]
+    E --> F[📊 Deepfake Probability]
+    F --> G[🔍 XAI Visualization]
 ```
+
+---
+
+## 🛠️ Project Structure
+
+```bash
 deepFaceDetection/
-│
-├── 📁 data_pipeline/          # Dataset directory setup scripts
-├── 📁 preprocessing/          # Frame extraction & face detection (RetinaFace)
-├── 📁 feature_extractors/     # CNN-based spatial feature extraction (ResNet-50)
-├── 📁 models/                 # Temporal (BiLSTM), Fusion, and classifier models
-├── 📁 training/               # Train loop, loss functions, optimizer configs
-├── 📁 evaluation/             # Metrics, ROC curves, confusion matrices
-├── 📁 inference/              # Inference pipeline for new videos
-├── 📁 extension/              # Browser extension for real-time deepfake detection
-│
-├── check_env.py               # 🔍 Checks GPU/CUDA availability
-├── requirements.txt           # 📦 All Python dependencies
-└── README.md
+├── 📁 models/                 # Multi-branch fusion model & backbones
+├── 📁 preprocessing/          # Face extraction & alignment pipeline
+├── 📁 feature_extractors/     # DCT, Identity, and Spatial processors
+├── 📁 training/               # Optimized training loops (AMP, AdamW)
+├── 📁 utils/                  # Explainability (Grad-CAM, Attention)
+├── 📁 report/                 # Detailed phase-by-phase documentation
+└── 📄 README.md               # You are here!
 ```
 
 ---
 
-## 🔬 Detection Pipeline
+## 📈 Roadmap
 
-```
-🎬 Input Video
-      │
-      ▼
-🖼️  Frame Extraction          ← Decord (GPU-accelerated, ~3-4x faster than OpenCV)
-      │
-      ▼
-👤  Face Detection             ← RetinaFace (landmark-aware)
-      │
-      ▼
-✂️   Face Crop + Resize        ← 224 × 224 px (with 10% margin)
-      │
-      ├─────────────────┬──────────────────────┐
-      ▼                 ▼                      ▼
-🧠 Spatial CNN      📈 Temporal BiLSTM    🌊 Frequency DCT
-   (ResNet-50)       (2-layer BiLSTM)     (DCT anomaly map)
-   2048-dim emb.     Detects flickers     Detects GAN artifacts
-      │                 │                      │
-      └─────────────────┴──────────────────────┘
-                        │
-                        ▼
-               🔀 Multi-Branch Fusion
-                        │
-                        ▼
-              📊 Deepfake Probability
-```
+- [x] **Phase 1-5**: Data pipeline, Frame & Face extraction (RetinaFace).
+- [x] **Phase 6-7**: Spatial (ResNet-50) & Temporal (BiLSTM) modeling.
+- [x] **Phase 8-10**: Frequency (DCT), Identity (FaceNet), and rPPG (Physiological).
+- [x] **Phase 11-12**: Attention Fusion Model & Multi-modal training.
+- [x] **Phase 13**: **Explainability Integration (Grad-CAM & XAI).**
+- [ ] **Phase 14**: Model Fine-tuning & Optimization.
+- [ ] **Phase 15-17**: Backend API, Dashboard & Browser Extension.
+- [ ] **Phase 18-19**: Evaluation & Final Presentation.
 
 ---
 
-## 🚀 Getting Started
+## 🧪 Explainability Example
 
-### 1. Clone the repo
-```bash
-git clone https://github.com/roshinit-a/deepfake-video-detector.git
-cd deepfake-video-detector
+Want to know *why* the model made a prediction? 
+
+```python
+from utils.explainability import DeepfakeExplainer
+
+# Load explainer with trained model
+explainer = DeepfakeExplainer("training/best_model.pth")
+
+# Generate Attention weights and Grad-CAM
+explainer.visualize_attention("fake/Deepfakes/000_003", feature_roots)
+explainer.generate_gradcam("faces/fake/Deepfakes/000_003/frame_0000.jpg")
 ```
-
-### 2. Set up environment
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-### 3. Check your GPU
-```bash
-python3 check_env.py
-```
-
-### 4. Prepare dataset
-Place your videos inside:
-```
-dataset/
-├── real/
-└── fake/
-```
-
-### 5. Run the pipeline
-```bash
-# Step 1: Extract frames (GPU-accelerated via Decord)
-python3 preprocessing/extract_frames.py
-
-# Step 2: Detect and crop faces (RetinaFace)
-python3 preprocessing/extract_faces.py
-
-# Step 3: Extract spatial features (ResNet-50)
-python3 feature_extractors/extract_spatial_features.py
-```
-
----
-
-## 📦 Key Dependencies
-
-| Library | Purpose |
-|--------|---------|
-| `torch` / `torchvision` | Deep learning backbone |
-| `retina-face` | State-of-the-art face detection |
-| `decord` | Fast GPU-accelerated video decoding |
-| `opencv-python` | Image processing & visualization |
-| `numpy` | Numerical operations |
-| `tqdm` | Progress bars |
-| `fastapi` | Backend API server |
-
----
-
-## 🗺️ Roadmap
-
-- [x] Phase 1: Project Structure
-- [x] Phase 2: Environment Setup
-- [x] Phase 3: Dataset Acquisition
-- [x] Phase 4: Frame Extraction
-- [x] Phase 5: Face Detection (RetinaFace)
-- [x] Phase 6: Spatial Feature Extraction (ResNet-50)
-- [x] Phase 7: Temporal Modeling (BiLSTM)
-- [ ] Phase 8: Frequency-Domain Detection (DCT)
-- [ ] Phase 9: Identity Consistency Detection
-- [ ] Phase 10: Physiological Signal Detection
-- [ ] Phase 11: Multi-Branch Fusion Model
-- [ ] Phase 12: Training Strategy
-- [ ] Phase 13: Explainability
-- [ ] Phase 14: Model Optimization
-- [ ] Phase 15: Backend API
-- [ ] Phase 16: Browser Extension
-- [ ] Phase 17: Visualization Dashboard
-- [ ] Phase 18: Evaluation & Research Report
-- [ ] Phase 19: Final Presentation
 
 ---
 
 ## 🤝 Contributing
 
-Pull requests are welcome! For major changes, please open an issue first.
+We are actively improving the model! Feel free to open issues or PRs.
 
 ---
 
 ## 📄 License
 
-[MIT](LICENSE) © 2025 roshinit-a
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+Developed with ❤️ by [roshinit-a](https://github.com/roshinit-a)

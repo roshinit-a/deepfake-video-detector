@@ -258,7 +258,7 @@ class DeepfakeFusionModel(nn.Module):
             nn.Linear(128, num_classes), # Final output logit
         )
 
-    def forward(self, spatial_emb, freq_emb, identity_scores, rppg_features):
+    def forward(self, spatial_emb, freq_emb, identity_scores, rppg_features, return_attention=False):
         """
         Full forward pass through all branches and the fusion head.
 
@@ -267,9 +267,11 @@ class DeepfakeFusionModel(nn.Module):
             freq_emb        (Tensor): (B, seq_len, 192)  — DCT frequency features
             identity_scores (Tensor): (B, 29)            — consecutive cosine similarities
             rppg_features   (Tensor): (B, rppg_dim)      — rPPG feature vector
+            return_attention (bool):  If True, also returns the channel attention weights.
 
         Returns:
             Tensor: (B, 1) — raw logit for Binary CrossEntropy loss
+            (Optional) Tensor: (B, 4) — attention weights for the 4 branches
         """
         # ── Run each branch independently ──────────────────────────────────────
         s_feat = self.spatial_branch(spatial_emb)                         # (B, 256)
@@ -298,6 +300,9 @@ class DeepfakeFusionModel(nn.Module):
         # ── Pass through the final fusion MLP classifier ───────────────────────
         logit = self.fusion_head(weighted_flat)                 # (B, 1)
 
+        if return_attention:
+            return logit, attn_weights
+            
         return logit
 
 
